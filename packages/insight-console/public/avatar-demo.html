@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatar 动画演示</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .canvas-container {
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #1e293b;
+        }
+        canvas {
+            display: block;
+            border-radius: 8px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .btn-evolve {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        .btn-mutate {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+        }
+        .btn-reset {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        .info {
+            text-align: center;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+        .stage-info {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #3b82f6;
+        }
+        .mutation-list {
+            margin-top: 10px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 OpenClaw Evolution System - 动画演示</h1>
+
+    <div class="canvas-container">
+        <canvas id="avatarCanvas" width="400" height="400"></canvas>
+    </div>
+
+    <div class="info">
+        <div class="stage-info" id="stageInfo">当前阶段: Base</div>
+        <div class="mutation-list" id="mutationList">突变: 无</div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-evolve" onclick="evolveToNext()">⬆️ 进化到下一阶段</button>
+        <button class="btn-mutate" onclick="addRandomMutation()">✨ 添加随机突变</button>
+        <button class="btn-reset" onclick="reset()">🔄 重置</button>
+    </div>
+
+    <script type="module">
+        import { createAvatarManager } from '../src/avatar/avatar.ts';
+        import { createSimpleRenderer } from '../src/renderer/simple.ts';
+
+        const avatar = createAvatarManager({ baseColor: '#3b82f6', size: 200 });
+        const canvas = document.getElementById('avatarCanvas');
+        const stageInfo = document.getElementById('stageInfo');
+        const mutationList = document.getElementById('mutationList');
+
+        const renderer = createSimpleRenderer({
+            width: 400,
+            height: 400,
+            backgroundColor: '#1e293b'
+        });
+
+        renderer.initialize(canvas);
+
+        // 颜色映射
+        const stageColors = {
+            base: '#3b82f6',
+            awakened: '#8b5cf6',
+            learned: '#a855f7',
+            evolved: '#ec4899'
+        };
+
+        const stageNames = {
+            base: 'Base',
+            awakened: 'Awakened',
+            learned: 'Learned',
+            evolved: 'Evolved'
+        };
+
+        // 更新信息显示
+        function updateInfo() {
+            const stage = avatar.getStage();
+            stageInfo.textContent = `当前阶段: ${stageNames[stage]}`;
+            stageInfo.style.color = stageColors[stage];
+
+            const mutations = avatar.getMutations();
+            if (mutations.length > 0) {
+                mutationList.textContent = `突变: ${mutations.join(', ')}`;
+            } else {
+                mutationList.textContent = '突变: 无';
+            }
+        }
+
+        // 启动动画循环
+        renderer.startAnimation((progress) => ({
+            stage: avatar.getStage(),
+            mutations: avatar.getMutations(),
+            animationProgress: progress,
+            isAnimating: true
+        }));
+
+        // 全局函数
+        window.evolveToNext = () => {
+            const stages = ['base', 'awakened', 'learned', 'evolved'];
+            const currentStage = avatar.getStage();
+            const currentIndex = stages.indexOf(currentStage);
+
+            if (currentIndex < stages.length - 1) {
+                avatar.evolveToStage(stages[currentIndex + 1]);
+                updateInfo();
+            } else {
+                alert('已经是最高阶段！');
+            }
+        };
+
+        window.addRandomMutation = () => {
+            const mutations = ['shell_glow', 'node_expand', 'badge_attach', 'color_shift', 'particle_emit', 'geometry_transform'];
+            const available = mutations.filter(m => !avatar.getMutations().includes(m));
+
+            if (available.length > 0) {
+                const random = available[Math.floor(Math.random() * available.length)];
+                avatar.addMutations([random]);
+                updateInfo();
+            } else {
+                alert('所有突变都已添加！');
+            }
+        };
+
+        window.reset = () => {
+            avatar.reset();
+            updateInfo();
+        };
+
+        // 初始化显示
+        updateInfo();
+    </script>
+</body>
+</html>
