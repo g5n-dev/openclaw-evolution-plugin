@@ -1,0 +1,44 @@
+{
+  "name": "openclaw-evolution-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenClaw Evolution Plugin - A plugin-first evolution layer for OpenClaw",
+  "scripts": {
+    "dev": "pnpm --filter './packages/*' dev",
+    "build": "pnpm --filter './packages/*' build",
+    "test": "pnpm -r --filter './packages/*' test",
+    "test:unit": "vitest --run",
+    "test:integration": "vitest --run --config tests/integration/vitest.config.ts",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "typecheck": "pnpm -r exec tsc --noEmit",
+    "clean": "pnpm -r exec rm -rf dist node_modules",
+    "setup": "node scripts/setup.js"
+  },
+  "keywords": [
+    "openclaw",
+    "evolution",
+    "plugin",
+    "ai",
+    "autonomous"
+  ],
+  "author": "OpenClaw Evolution Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.10.0"
+  },
+  "packageManager": "pnpm@8.12.0"
+}

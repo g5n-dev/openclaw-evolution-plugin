@@ -1,0 +1,86 @@
+{
+  "$schema": "https://schema.openclaw.ai/plugin/v1",
+  "name": "@openclaw-evolution/plugin-runtime",
+  "version": "0.1.0",
+  "description": "OpenClaw Evolution Plugin - A plugin-first evolution layer for OpenClaw",
+  "author": "OpenClaw Evolution Team",
+  "license": "MIT",
+  "runtime": {
+    "type": "node",
+    "entry": "dist/index.js",
+    "minVersion": "2026.3.0"
+  },
+  "capabilities": [
+    "event_capture",
+    "card_rendering",
+    "sidebar_integration",
+    "inline_cards",
+    "external_cards",
+    "avatar_animation"
+  ],
+  "permissions": [
+    "read:conversations",
+    "read:messages",
+    "read:tools",
+    "write:cards",
+    "network:evolution_service"
+  ],
+  "settings": {
+    "serviceUrl": {
+      "type": "string",
+      "default": "http://localhost:3001",
+      "description": "Evolution Service URL"
+    },
+    "enableCardRendering": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable inline card rendering"
+    },
+    "enableAvatarAnimation": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable avatar animations"
+    },
+    "batchSize": {
+      "type": "number",
+      "default": 50,
+      "description": "Event batch size"
+    },
+    "batchTimeout": {
+      "type": "number",
+      "default": 5000,
+      "description": "Event batch timeout (ms)"
+    }
+  },
+  "menus": [
+    {
+      "id": "evolution-insights",
+      "label": "Evolution Insights",
+      "icon": "trending-up",
+      "action": "open_insights"
+    },
+    {
+      "id": "evolution-cards",
+      "label": "Evolution Cards",
+      "icon": "layout-grid",
+      "action": "open_cards"
+    }
+  ],
+  "events": {
+    "subscribe": [
+      "user_message",
+      "assistant_response",
+      "tool_call",
+      "tool_result",
+      "session_end"
+    ]
+  },
+  "dependencies": [],
+  "resources": {
+    "icons": {
+      "16": "assets/icon-16.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    }
+  }
+}
