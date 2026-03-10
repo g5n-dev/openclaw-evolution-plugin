@@ -168,6 +168,21 @@ export class EvolutionDatabase {
   }
 
   /**
+   * Create a new session
+   */
+  createSession(
+    sessionId: string,
+    startTime: number,
+    status = 'active'
+  ): void {
+    const stmt = this.db.prepare(`
+      INSERT INTO sessions (session_id, start_time, status, event_count)
+      VALUES (?, ?, ?, 0)
+    `);
+    stmt.run(sessionId, startTime, status);
+  }
+
+  /**
    * Get the underlying database instance
    */
   getDatabase(): Database.Database {

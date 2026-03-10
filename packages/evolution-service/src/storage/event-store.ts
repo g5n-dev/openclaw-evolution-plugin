@@ -52,7 +52,7 @@ export class EventStore {
   storeEvents(events: Event[]): void {
     const db = getDatabase();
 
-    const insertMany = db.transaction(() => {
+    const insertFn = () => {
       const stmt = db.prepare(`
         INSERT INTO events (event_id, session_id, event_type, event_data, timestamp, processed)
         VALUES (?, ?, ?, ?, ?, 0)
@@ -67,9 +67,9 @@ export class EventStore {
           event.timestamp
         );
       }
-    }) as unknown as () => void;
+    };
 
-    insertMany();
+    db.transaction(insertFn);
   }
 
   /**

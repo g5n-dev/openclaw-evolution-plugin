@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { EventType, createEventId } from '@openclaw-evolution/shared-types';
+import { EventType, createEventId, AvatarStage, AnimationType, AnimationIntensity } from '@openclaw-evolution/shared-types';
 
 describe('Shared Types', () => {
   describe('EventType', () => {
@@ -45,8 +45,6 @@ describe('Shared Types', () => {
 
   describe('AvatarStage', () => {
     it('should have correct stage values', () => {
-      const { AvatarStage } = require('@openclaw-evolution/shared-types');
-
       expect(AvatarStage.BASE).toBe('base');
       expect(AvatarStage.AWAKENED).toBe('awakened');
       expect(AvatarStage.LEARNED).toBe('learned');
@@ -56,8 +54,6 @@ describe('Shared Types', () => {
 
   describe('AnimationType', () => {
     it('should have correct animation types', () => {
-      const { AnimationType } = require('@openclaw-evolution/shared-types');
-
       expect(AnimationType.PULSE).toBe('pulse');
       expect(AnimationType.EVALUATING).toBe('evaluating');
       expect(AnimationType.ACTIVATION).toBe('activation');
@@ -69,8 +65,6 @@ describe('Shared Types', () => {
 
   describe('AnimationIntensity', () => {
     it('should have correct intensity values', () => {
-      const { AnimationIntensity } = require('@openclaw-evolution/shared-types');
-
       expect(AnimationIntensity.LOW).toBe('low');
       expect(AnimationIntensity.MEDIUM).toBe('medium');
       expect(AnimationIntensity.HIGH).toBe('high');

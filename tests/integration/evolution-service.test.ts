@@ -10,9 +10,11 @@ import type { Event } from '@openclaw-evolution/shared-types';
 import { EventType, createEventId } from '@openclaw-evolution/shared-types';
 
 describe('Evolution Service Integration', () => {
+  let db: any;
+
   beforeEach(() => {
     // Use in-memory database for tests
-    getDatabase({ memory: true });
+    db = getDatabase({ memory: true });
   });
 
   afterEach(() => {
@@ -24,6 +26,8 @@ describe('Evolution Service Integration', () => {
 
     beforeEach(() => {
       store = getEventStore();
+      // Create a test session first
+      db.createSession('test-session', Date.now());
     });
 
     it('should store an event', () => {
@@ -67,6 +71,10 @@ describe('Evolution Service Integration', () => {
     });
 
     it('should query events by session', () => {
+      // Create sessions first
+      db.createSession('session-1', Date.now());
+      db.createSession('session-2', Date.now());
+
       const event1: Event = {
         id: createEventId(),
         type: EventType.USER_MESSAGE as any,
@@ -101,6 +109,8 @@ describe('Evolution Service Integration', () => {
 
     beforeEach(() => {
       store = getCandidateStore();
+      // Create a test session first
+      db.createSession('test-session', Date.now());
     });
 
     it('should create a candidate', () => {
@@ -160,12 +170,13 @@ describe('Evolution Service Integration', () => {
       expect(eventStore).toBeDefined();
       expect(candidateStore).toBeDefined();
 
-      // Both should use the same database
-      const db1 = (eventStore as any).getDatabase?.();
-      const db2 = (candidateStore as any).getDatabase?.();
+      // Both should use the same database instance
+      const db1 = getDatabase();
+      const db2 = getDatabase();
 
       expect(db1).toBeDefined();
       expect(db2).toBeDefined();
+      expect(db1).toBe(db2);
     });
   });
 });

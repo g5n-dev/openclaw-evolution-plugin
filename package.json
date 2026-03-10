@@ -6,16 +6,17 @@
   "scripts": {
     "dev": "pnpm --filter './packages/*' dev",
     "build": "pnpm --filter './packages/*' build",
-    "test": "pnpm -r --filter './packages/*' test",
-    "test:unit": "vitest --run",
-    "test:integration": "vitest --run --config tests/integration/vitest.config.ts",
+    "test": "vitest --run",
+    "test:unit": "vitest --run tests/unit",
+    "test:integration": "vitest --run tests/integration",
     "test:e2e": "playwright test",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "typecheck": "pnpm -r exec tsc --noEmit",
     "clean": "pnpm -r exec rm -rf dist node_modules",
-    "setup": "node scripts/setup.js"
+    "setup": "node scripts/setup.js",
+    "verify": "vitest --run tests/verification.test.ts"
   },
   "keywords": [
     "openclaw",
