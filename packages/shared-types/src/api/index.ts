@@ -269,6 +269,26 @@ export interface FunnelMetrics {
   };
 }
 
+export interface SkillAnalysis {
+  totalSkills: number;
+  activeSkills: number;
+  skillsByType: Record<string, number>;
+  recentlyPromoted: number;
+  averageConfidence: number;
+  topSkills: Array<{
+    skillId: string;
+    skillName: string;
+    skillType: string;
+    usageCount: number;
+    confidence: number;
+  }>;
+  trends: {
+    promotionRate: number;
+    deprecationRate: number;
+    rollbackRate: number;
+  };
+}
+
 export interface CompatibilityInfo {
   hostVersion: string;
   pluginVersion: string;

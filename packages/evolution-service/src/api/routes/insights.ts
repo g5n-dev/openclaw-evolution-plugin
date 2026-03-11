@@ -5,11 +5,8 @@
  */
 
 import { Hono } from 'hono';
-import type {
-  DashboardMetrics,
-  FunnelMetrics,
-  CompatibilityInfo,
-} from '@openclaw-evolution/shared-types';
+import type { CompatibilityInfo } from '@openclaw-evolution/shared-types';
+import { getInsightsStore } from '../../storage/insights-store';
 
 export const insightsRouter = new Hono();
 
@@ -18,24 +15,14 @@ export const insightsRouter = new Hono();
  */
 insightsRouter.get('/dashboard', async (c) => {
   try {
-    // TODO: Implement time_range and session_id filtering
-    // const timeRange = c.req.query('time_range') || 'day';
-    // const sessionId = c.req.query('session_id');
+    const timeRange = c.req.query('time_range') || '24h';
+    const sessionId = c.req.query('session_id');
 
-    // For MVP, return placeholder metrics
-    const metrics: DashboardMetrics = {
-      totalSessions: 1,
-      totalEvents: 100,
-      totalCandidates: 5,
-      totalEvaluations: 3,
-      promotedSkills: 2,
-      activeSkills: 2,
-      avgEvaluationScore: 0.75,
-      eventRate: {
-        hourly: 10,
-        daily: 100,
-      },
-    };
+    const insightsStore = getInsightsStore();
+    const metrics = insightsStore.getDashboardMetrics({
+      timeRange: insightsStore.parseTimeRange(timeRange),
+      sessionId,
+    });
 
     return c.json({
       success: true,
@@ -43,10 +30,13 @@ insightsRouter.get('/dashboard', async (c) => {
     });
   } catch (error) {
     console.error('Dashboard metrics error:', error);
-    return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Dashboard metrics query failed',
-    }, 500);
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Dashboard metrics query failed',
+      },
+      500
+    );
   }
 });
 
@@ -55,24 +45,14 @@ insightsRouter.get('/dashboard', async (c) => {
  */
 insightsRouter.get('/funnel', async (c) => {
   try {
-    // TODO: Implement time_range and session_id filtering
-    // const timeRange = c.req.query('time_range') || 'day';
-    // const sessionId = c.req.query('session_id');
+    const timeRange = c.req.query('time_range') || '24h';
+    const sessionId = c.req.query('session_id');
 
-    // For MVP, return placeholder metrics
-    const metrics: FunnelMetrics = {
-      eventsCaptured: 100,
-      candidatesDetected: 5,
-      evaluationsRun: 3,
-      cardsPresented: 2,
-      skillsPromoted: 1,
-      conversionRates: {
-        eventToCandidate: 0.05,
-        candidateToEvaluation: 0.6,
-        evaluationToCard: 0.67,
-        cardToPromotion: 0.5,
-      },
-    };
+    const insightsStore = getInsightsStore();
+    const metrics = insightsStore.getFunnelMetrics({
+      timeRange: insightsStore.parseTimeRange(timeRange),
+      sessionId,
+    });
 
     return c.json({
       success: true,
@@ -80,10 +60,41 @@ insightsRouter.get('/funnel', async (c) => {
     });
   } catch (error) {
     console.error('Funnel metrics error:', error);
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Funnel metrics query failed',
+      },
+      500
+    );
+  }
+});
+
+/**
+ * Get skill analysis
+ */
+insightsRouter.get('/skills', async (c) => {
+  try {
+    const timeRange = c.req.query('time_range') || '7d';
+
+    const insightsStore = getInsightsStore();
+    const analysis = insightsStore.getSkillAnalysis({
+      timeRange: insightsStore.parseTimeRange(timeRange),
+    });
+
     return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Funnel metrics query failed',
-    }, 500);
+      success: true,
+      data: analysis,
+    });
+  } catch (error) {
+    console.error('Skill analysis error:', error);
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Skill analysis query failed',
+      },
+      500
+    );
   }
 });
 
@@ -93,6 +104,7 @@ insightsRouter.get('/funnel', async (c) => {
 insightsRouter.get('/compatibility', async (c) => {
   try {
     // For MVP, return placeholder compatibility info
+    // This would be enhanced with real compatibility detection in the future
     const info: CompatibilityInfo = {
       hostVersion: '2026.3.8',
       pluginVersion: '0.1.0',
@@ -116,9 +128,12 @@ insightsRouter.get('/compatibility', async (c) => {
     });
   } catch (error) {
     console.error('Compatibility info error:', error);
-    return c.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Compatibility info query failed',
-    }, 500);
+    return c.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Compatibility info query failed',
+      },
+      500
+    );
   }
 });
