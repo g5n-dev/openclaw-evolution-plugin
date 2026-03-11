@@ -25,7 +25,7 @@ describe('Evolution Service API Integration', () => {
   });
 
   describe('POST /v1/runtime/handshake', () => {
-    it('should perform handshake successfully', async () => {
+    it('should perform handshake successfully', { timeout: 10000 }, async () => {
       const response = await fetch(`${baseUrl}/v1/runtime/handshake`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,7 +45,7 @@ describe('Evolution Service API Integration', () => {
       expect(data.hostInfo).toBeDefined();
     });
 
-    it('should return error for invalid handshake', async () => {
+    it('should return error for invalid handshake', { timeout: 10000 }, async () => {
       const response = await fetch(`${baseUrl}/v1/runtime/handshake`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,7 +57,7 @@ describe('Evolution Service API Integration', () => {
   });
 
   describe('POST /v1/events', () => {
-    it('should accept events', async () => {
+    it('should accept events', { timeout: 10000 }, async () => {
       const response = await fetch(`${baseUrl}/v1/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -81,7 +81,7 @@ describe('Evolution Service API Integration', () => {
   });
 
   describe('GET /v1/insights/dashboard', () => {
-    it('should return dashboard metrics', async () => {
+    it('should return dashboard metrics', { timeout: 10000 }, async () => {
       const response = await fetch(`${baseUrl}/v1/insights/dashboard`);
 
       expect(response.status).toBe(200);

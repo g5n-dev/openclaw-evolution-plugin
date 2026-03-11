@@ -8,6 +8,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
+import { serve } from '@hono/node-server';
 // Hono types
 
 // Import routes
@@ -162,9 +163,14 @@ export class EvolutionServer {
 
       console.log(`Server running on ${url}`);
     } else {
-      // Fallback for Node.js environments
-      console.log(`Note: HTTP server requires Bun runtime or use Node.js HTTP adapter`);
-      console.log(`Server configured for ${url}`);
+      // Node.js environment
+      this.server = await serve({
+        fetch: this.app.fetch,
+        hostname: this.config.host,
+        port: this.config.port,
+      });
+
+      console.log(`Server running on ${url}`);
     }
   }
 
@@ -173,7 +179,12 @@ export class EvolutionServer {
    */
   async stop(): Promise<void> {
     if (this.server) {
-      this.server.stop();
+      // @ts-ignore - Bun and Node.js server both have close/stop
+      if (typeof this.server.close === 'function') {
+        this.server.close();
+      } else if (typeof this.server.stop === 'function') {
+        this.server.stop();
+      }
       this.server = undefined;
       console.log('Server stopped');
     }

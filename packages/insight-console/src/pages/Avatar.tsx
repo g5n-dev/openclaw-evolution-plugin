@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap } from 'lucide-react';
-import { createAvatarManager, createSimpleRenderer } from '@openclaw-evolution/evolution-engine';
+import { Zap, Download, Play } from 'lucide-react';
+import { createAvatarManager, createSimpleRenderer, createProfessionalRenderer } from '@openclaw-evolution/evolution-engine';
 
 type AvatarStage = 'base' | 'awakened' | 'learned' | 'evolved';
 
 export function AvatarPage() {
   const [stage, setStage] = useState<AvatarStage>('base');
+  const [useProfessionalRenderer, setUseProfessionalRenderer] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const avatarRef = useRef(createAvatarManager({ baseColor: '#3b82f6', size: 200 }));
-  const rendererRef = useRef<ReturnType<typeof createSimpleRenderer> | null>(null);
+  const rendererRef = useRef<any>(null);
 
   // 初始化渲染器
   useEffect(() => {
@@ -16,27 +17,43 @@ export function AvatarPage() {
       return;
     }
 
-    const renderer = createSimpleRenderer({
-      width: 400,
-      height: 400,
-      backgroundColor: '#0f172a',
-    });
+    const renderer = useProfessionalRenderer
+      ? createProfessionalRenderer({
+          width: 400,
+          height: 400,
+          backgroundColor: '#0B0B10',  // Deep Space Black
+        })
+      : createSimpleRenderer({
+          width: 400,
+          height: 400,
+          backgroundColor: '#0f172a',
+        });
 
     renderer.initialize(canvasRef.current);
     rendererRef.current = renderer;
 
     // 启动动画循环
-    renderer.startAnimation((progress: number) => ({
-      stage: avatarRef.current.getStage(),
-      mutations: avatarRef.current.getMutations(),
-      animationProgress: progress,
-      isAnimating: true,
-    }));
+    if (useProfessionalRenderer) {
+      (renderer as any).startAnimation((progress: number, time: number) => ({
+        stage: avatarRef.current.getStage(),
+        mutations: avatarRef.current.getMutations(),
+        animationProgress: progress,
+        isAnimating: true,
+        time,
+      }));
+    } else {
+      (renderer as any).startAnimation((progress: number) => ({
+        stage: avatarRef.current.getStage(),
+        mutations: avatarRef.current.getMutations(),
+        animationProgress: progress,
+        isAnimating: true,
+      }));
+    }
 
     return () => {
       renderer.dispose();
     };
-  }, []);
+  }, [useProfessionalRenderer]);
 
   // 更新 Avatar 状态
   useEffect(() => {
@@ -75,7 +92,11 @@ export function AvatarPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Evolution Avatar</h1>
-        <p className="text-muted-foreground">Real-time Canvas 2D rendering with animation effects</p>
+        <p className="text-muted-foreground">
+          {useProfessionalRenderer
+            ? '🦞 Professional rendering with organic evolution effects'
+            : 'Real-time Canvas 2D rendering with animation effects'}
+        </p>
       </div>
 
       <div className="card p-8">
@@ -119,7 +140,7 @@ export function AvatarPage() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap justify-center">
             <button
               onClick={handleEvolve}
               disabled={stage === 'evolved'}
@@ -134,6 +155,17 @@ export function AvatarPage() {
               className="px-6 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
             >
               Reset
+            </button>
+
+            <button
+              onClick={() => setUseProfessionalRenderer(!useProfessionalRenderer)}
+              className={`px-6 py-3 rounded-lg transition-colors ${
+                useProfessionalRenderer
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  : 'bg-secondary text-secondary-foreground'
+              }`}
+            >
+              {useProfessionalRenderer ? '✨ Pro Mode' : 'Simple Mode'}
             </button>
           </div>
         </div>

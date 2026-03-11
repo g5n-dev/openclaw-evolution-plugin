@@ -12,6 +12,7 @@ export * from './animations/protocol';
 export * from './replay/logger';
 export * from './replay/player';
 export * from './renderer/simple';
+export { createProfessionalRenderer, ProfessionalRenderer } from './renderer/professional';
 
 // Re-export types from shared-types
 export type {

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@openclaw-evolution/shared-types": "workspace:*",
+    "@hono/node-server": "^1.8.0",
     "hono": "^4.0.0",
     "better-sqlite3": "^9.2.0",
     "zod": "^3.22.0",

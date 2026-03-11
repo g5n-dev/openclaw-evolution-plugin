@@ -66,6 +66,9 @@ importers:
 
   packages/evolution-service:
     dependencies:
+      '@hono/node-server':
+        specifier: ^1.8.0
+        version: 1.19.9(hono@4.12.6)
       '@openclaw-evolution/shared-types':
         specifier: workspace:*
         version: link:../shared-types
@@ -1405,7 +1408,6 @@ packages:
     dependencies:
       hono: 4.12.6
     dev: false
-    optional: true
 
   /@huggingface/jinja@0.5.6:
     resolution: {integrity: sha512-MyMWyLnjqo+KRJYSH7oWNbsOn5onuIvfXYPcc0WOGxU0eHUV7oAYUoQTl2BMdu7ml+ea/bu11UM+EshbeHwtIA==}
