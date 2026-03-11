@@ -13,6 +13,8 @@ export * from './replay/logger';
 export * from './replay/player';
 export * from './renderer/simple';
 export { createProfessionalRenderer, ProfessionalRenderer } from './renderer/professional';
+export { createA2UIRenderer, A2UIRenderer } from './renderer/a2ui-renderer';
+export type { A2UIRenderState, A2UIRendererConfig } from './renderer/a2ui-renderer';
 
 // Re-export types from shared-types
 export type {

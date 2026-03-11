@@ -40,7 +40,7 @@ export class AvatarManager {
   private initializeAvatar(): AvatarState {
     return {
       avatarId: uuidv4(),
-      currentStage: 'base' as any,
+      currentStage: 'base',
       mutations: [],
       createdAt: Date.now(),
       evolutionCount: 0,
@@ -78,13 +78,10 @@ export class AvatarManager {
   /**
    * Evolve to next stage
    */
-  evolveToStage(stage: any): void {
+  evolveToStage(stage: AvatarStage): void {
     if (!this.isValidStageTransition(this.state.currentStage, stage)) {
       throw new Error(`Invalid stage transition: ${this.state.currentStage} -> ${stage}`);
     }
-
-    // TODO: Log previous stage for analytics/debugging
-    // const previousStage = this.state.currentStage;
 
     this.state.currentStage = stage;
     this.state.lastMutationAt = Date.now();
@@ -114,8 +111,8 @@ export class AvatarManager {
   /**
    * Check if stage transition is valid
    */
-  private isValidStageTransition(from: any, to: any): boolean {
-    const stageOrder = ['base', 'awakened', 'learned', 'evolved'];
+  private isValidStageTransition(from: AvatarStage, to: AvatarStage): boolean {
+    const stageOrder: AvatarStage[] = ['base', 'awakened', 'learned', 'evolved'];
     const fromIndex = stageOrder.indexOf(from);
     const toIndex = stageOrder.indexOf(to);
 
@@ -127,7 +124,7 @@ export class AvatarManager {
    * Add mutations for stage upgrade
    */
   private addMutationsForStage(stage: AvatarStage): void {
-    const stageMutations: Record<string, any> = {
+    const stageMutations: Record<AvatarStage, MutationType[]> = {
       base: [],
       awakened: ['shell_glow'],
       learned: ['shell_glow', 'node_expand'],

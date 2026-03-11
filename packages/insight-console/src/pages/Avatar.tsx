@@ -1,15 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { Zap } from 'lucide-react';
-import { createAvatarManager, createSimpleRenderer, createProfessionalRenderer } from '@openclaw-evolution/evolution-engine';
+import {
+  createAvatarManager,
+  createSimpleRenderer,
+  createProfessionalRenderer,
+  createA2UIRenderer,
+  type AvatarStage,
+} from '@openclaw-evolution/evolution-engine';
 
-type AvatarStage = 'base' | 'awakened' | 'learned' | 'evolved';
+type RendererType = 'simple' | 'professional' | 'a2ui';
 
 export function AvatarPage() {
   const [stage, setStage] = useState<AvatarStage>('base');
-  const [useProfessionalRenderer, setUseProfessionalRenderer] = useState(true);
+  const [rendererType, setRendererType] = useState<RendererType>('professional');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const avatarRef = useRef(createAvatarManager({ baseColor: '#3b82f6', size: 200 }));
-  const rendererRef = useRef<any>(null);
+  const rendererRef = useRef<ReturnType<typeof createSimpleRenderer> | ReturnType<typeof createProfessionalRenderer> | ReturnType<typeof createA2UIRenderer> | null>(null);
 
   // 初始化渲染器
   useEffect(() => {
@@ -17,24 +23,45 @@ export function AvatarPage() {
       return;
     }
 
-    const renderer = useProfessionalRenderer
-      ? createProfessionalRenderer({
+    let renderer: ReturnType<typeof createSimpleRenderer> | ReturnType<typeof createProfessionalRenderer> | ReturnType<typeof createA2UIRenderer>;
+
+    switch (rendererType) {
+      case 'professional':
+        renderer = createProfessionalRenderer({
           width: 400,
           height: 400,
           backgroundColor: '#0B0B10',  // Deep Space Black
-        })
-      : createSimpleRenderer({
+        });
+        break;
+      case 'a2ui':
+        renderer = createA2UIRenderer({
+          width: 400,
+          height: 400,
+          backgroundColor: '#0B0B10',
+          registry: {
+            register: () => {},
+            get: () => undefined,
+            getAvailableTypes: () => [],
+            has: () => false,
+            unregister: () => {},
+          },
+          enableIncrementalUpdates: true,
+        });
+        break;
+      default:
+        renderer = createSimpleRenderer({
           width: 400,
           height: 400,
           backgroundColor: '#0f172a',
         });
+    }
 
     renderer.initialize(canvasRef.current);
     rendererRef.current = renderer;
 
     // 启动动画循环
-    if (useProfessionalRenderer) {
-      (renderer as any).startAnimation((progress: number, time: number) => ({
+    if (rendererType === 'professional' || rendererType === 'a2ui') {
+      (renderer as ReturnType<typeof createProfessionalRenderer>).startAnimation((progress: number, time: number) => ({
         stage: avatarRef.current.getStage(),
         mutations: avatarRef.current.getMutations(),
         animationProgress: progress,
@@ -42,7 +69,7 @@ export function AvatarPage() {
         time,
       }));
     } else {
-      (renderer as any).startAnimation((progress: number) => ({
+      (renderer as ReturnType<typeof createSimpleRenderer>).startAnimation((progress: number) => ({
         stage: avatarRef.current.getStage(),
         mutations: avatarRef.current.getMutations(),
         animationProgress: progress,
@@ -53,11 +80,11 @@ export function AvatarPage() {
     return () => {
       renderer.dispose();
     };
-  }, [useProfessionalRenderer]);
+  }, [rendererType]);
 
   // 更新 Avatar 状态
   useEffect(() => {
-    avatarRef.current.evolveToStage(stage as any);
+    avatarRef.current.evolveToStage(stage);
   }, [stage]);
 
   const stages: AvatarStage[] = ['base', 'awakened', 'learned', 'evolved'];
@@ -93,8 +120,10 @@ export function AvatarPage() {
       <div>
         <h1 className="text-3xl font-bold">Evolution Avatar</h1>
         <p className="text-muted-foreground">
-          {useProfessionalRenderer
+          {rendererType === 'professional'
             ? '🦞 Professional rendering with organic evolution effects'
+            : rendererType === 'a2ui'
+            ? '🎨 A2UI declarative rendering with incremental updates'
             : 'Real-time Canvas 2D rendering with animation effects'}
         </p>
       </div>
@@ -158,14 +187,21 @@ export function AvatarPage() {
             </button>
 
             <button
-              onClick={() => setUseProfessionalRenderer(!useProfessionalRenderer)}
+              onClick={() => {
+                const types: RendererType[] = ['simple', 'professional', 'a2ui'];
+                const currentIndex = types.indexOf(rendererType);
+                const nextIndex = (currentIndex + 1) % types.length;
+                setRendererType(types[nextIndex]);
+              }}
               className={`px-6 py-3 rounded-lg transition-colors ${
-                useProfessionalRenderer
+                rendererType === 'simple'
+                  ? 'bg-secondary text-secondary-foreground'
+                  : rendererType === 'professional'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                  : 'bg-secondary text-secondary-foreground'
+                  : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
               }`}
             >
-              {useProfessionalRenderer ? '✨ Pro Mode' : 'Simple Mode'}
+              {rendererType === 'simple' ? 'Simple Mode' : rendererType === 'professional' ? '✨ Pro Mode' : '🎨 A2UI Mode'}
             </button>
           </div>
         </div>

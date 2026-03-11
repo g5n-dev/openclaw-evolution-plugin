@@ -5,6 +5,8 @@
  * They represent candidate improvements awaiting approval.
  */
 
+import type { A2UIResponse } from '../a2ui';
+
 // Card models define evolution card types and structures
 
 // =============================================================================
@@ -161,3 +163,39 @@ export interface CardRenderResult {
   fallbackAvailable: boolean;
   renderData?: Record<string, unknown>;
 }
+
+// =============================================================================
+// A2UI Enhanced Card
+// =============================================================================
+
+/**
+ * A2UI-enhanced card with declarative UI layout
+ * Extends BaseCard with A2UI rendering support
+ */
+export interface A2UIEnhancedCard extends BaseCard {
+  /** A2UI layout configuration */
+  a2ui: {
+    /** A2UI response with component tree */
+    layout: A2UIResponse;
+
+    /** Theme variant */
+    theme?: 'material' | 'adaptive' | 'dynamic';
+
+    /** Enable user interaction */
+    interactive?: boolean;
+
+    /** Enable incremental updates */
+    enableUpdates?: boolean;
+  };
+}
+
+// =============================================================================
+// Card Union with A2UI
+// =============================================================================
+
+/**
+ * Extended card union including A2UI-enhanced cards
+ */
+export type ExtendedCard =
+  | Card
+  | A2UIEnhancedCard;
