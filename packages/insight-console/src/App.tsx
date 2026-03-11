@@ -9,6 +9,7 @@ import { CandidatesPage } from './pages/Candidates';
 import { SkillsPage } from './pages/Skills';
 import { CompatibilityPage } from './pages/Compatibility';
 import { AvatarPage } from './pages/Avatar';
+import { SponsorPage } from './pages/Sponsor';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/skills" element={<SkillsPage />} />
                 <Route path="/compatibility" element={<CompatibilityPage />} />
                 <Route path="/avatar" element={<AvatarPage />} />
+                <Route path="/sponsor" element={<SponsorPage />} />
               </Routes>
             </main>
           </div>

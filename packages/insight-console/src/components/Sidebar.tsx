@@ -7,6 +7,7 @@ import {
   Settings,
   Sparkles,
   Shield,
+  Coffee,
 } from 'lucide-react';
 
 const navigation = [
@@ -16,6 +17,7 @@ const navigation = [
   { name: 'Skills', href: '/skills', icon: Sparkles },
   { name: 'Compatibility', href: '/compatibility', icon: Shield },
   { name: 'Avatar', href: '/avatar', icon: Settings },
+  { name: 'Sponsor', href: '/sponsor', icon: Coffee },
 ];
 
 interface SidebarProps {

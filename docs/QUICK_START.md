@@ -317,6 +317,25 @@ vercel
 
 ---
 
+## ☕ 支持我们
+
+如果这个项目对你有帮助，欢迎请我喝一杯咖啡！
+
+### 快速捐赠
+
+访问赞助页面：**http://localhost:3000/sponsor**
+
+### 加密货币
+
+- **Ethereum**: `0x2FbF8091585cB317b131CCF7116a5F5F8080eBa3`
+- **Bitcoin**: `bc1qlgx69s3t7e99f3yzaw26aqspewrkzvks5wluc9`
+- **Solana**: `2ezLjrXS6hjYmu3J85asQdEi6Zo6DB6EcsLneSHdrSvb`
+- **TON**: `TVS23vWDprEZHFoofzixHNFCid5sMaTX71`
+
+详细地址请查看：[CRYPTO_WALLET.md](./CRYPTO_WALLET.md)
+
+---
+
 ## 📮 获取帮助
 
 - **文档**: 查看 `/docs` 目录

@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenClaw Version](https://img.shields.io/badge/OpenClaw-2026.3.x-blue)](https://openclaw.ai)
 [![Status](https://img.shields.io/badge/Status-Alpha-orange)](https://github.com/openclaw-evolution/plugin)
+[![Sponsor](https://img.shields.io/badge/Sponsor-☕-ff69b4)](https://github.com/your-org/openclaw-evolution-plugin/blob/main/docs/QUICK_START.md#☕-请我喝咖啡)
 
 ---
 
@@ -396,6 +397,62 @@ MIT License - 详见 [LICENSE](./LICENSE)
 - **项目主页**: [github.com/your-org/openclaw-evolution-plugin](https://github.com/your-org/openclaw-evolution-plugin)
 - **问题反馈**: [GitHub Issues](https://github.com/your-org/openclaw-evolution-plugin/issues)
 - **讨论区**: [GitHub Discussions](https://github.com/your-org/openclaw-evolution-plugin/discussions)
+
+---
+
+## ☕ 请我喝咖啡
+
+如果这个项目对你有帮助，欢迎请我喝一杯咖啡！你的支持是我持续开发的动力。
+
+<div align="center">
+
+### 💖 支持方式
+
+#### 💰 加密货币
+
+**Ethereum (ETH) / ERC-20**
+```
+0x2FbF8091585cB317b131CCF7116a5F5F8080eBa3
+```
+支持: ETH, USDT, USDC 等
+
+**Bitcoin (BTC)**
+```
+bc1qlgx69s3t7e99f3yzaw26aqspewrkzvks5wluc9
+```
+
+**Solana (SOL)**
+```
+2ezLjrXS6hjYmu3J85asQdEi6Zo6DB6EcsLneSHdrSvb
+```
+
+**TON (Toncoin)**
+```
+TVS23vWDprEZHFoofzixHNFCid5sMaTX71
+```
+
+#### ☕ 传统方式
+
+**Buy Me a Coffee**
+<br>
+<a href="https://www.buymeacoffee.com/openclaw" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
+</a>
+
+---
+
+**🎁 赞助者福利**
+
+- ☕ **咖啡**: 在致谢名单中列出你的名字
+- 🍰 蛋糕: 在 README 中添加你的网站链接
+- 🎂 蛋糕塔: 成为项目的 Contributor
+- 🏆 特别赞助: 在项目主页展示你的 Logo
+
+**感谢所有赞助者的支持！** 💚
+
+[点击查看赞助者名单](./SPONSORS.md)
+
+</div>
 
 ---
 
