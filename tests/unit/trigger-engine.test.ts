@@ -5,7 +5,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TriggerEngine, getTriggerEngine } from '@openclaw-evolution/evolution-service';
 import type { Event } from '@openclaw-evolution/shared-types';
-import { EventType } from '@openclaw-evolution/shared-types';
 
 describe('TriggerEngine', () => {
   let engine: TriggerEngine;

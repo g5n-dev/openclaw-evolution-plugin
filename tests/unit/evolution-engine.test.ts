@@ -4,7 +4,6 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AvatarManager, createAvatarManager, DEFAULT_AVATAR_CONFIG } from '@openclaw-evolution/evolution-engine';
-import { AvatarStage } from '@openclaw-evolution/shared-types';
 
 describe('AvatarManager', () => {
   let manager: AvatarManager;
