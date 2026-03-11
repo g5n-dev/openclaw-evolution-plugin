@@ -8,6 +8,8 @@ export { EvolutionServer, createServer } from './api/server';
 export { EvolutionDatabase, getDatabase, closeDatabase } from './storage/database';
 export { EventStore, getEventStore } from './storage/event-store';
 export { CandidateStore, getCandidateStore } from './storage/candidate-store';
+export { CardStore, getCardStore, createCardStore } from './storage/card-store';
+export type { CardFilter } from './storage/card-store';
 export { TriggerEngine, getTriggerEngine } from './engines/trigger';
 export { CandidateExtractor, getCandidateExtractor } from './engines/extractor';
 export { Evaluator, getEvaluator } from './engines/evaluator';

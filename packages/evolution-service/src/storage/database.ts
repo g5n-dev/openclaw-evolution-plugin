@@ -89,8 +89,10 @@ CREATE TABLE IF NOT EXISTS cards (
   session_id TEXT NOT NULL,
   candidate_id TEXT NOT NULL,
   card_type TEXT NOT NULL,
-  card_data TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
   status TEXT NOT NULL,
+  content TEXT NOT NULL,
   created_at INTEGER NOT NULL,
   expires_at INTEGER,
   metadata TEXT,
@@ -100,6 +102,8 @@ CREATE TABLE IF NOT EXISTS cards (
 
 CREATE INDEX IF NOT EXISTS idx_cards_session ON cards(session_id);
 CREATE INDEX IF NOT EXISTS idx_cards_status ON cards(status);
+CREATE INDEX IF NOT EXISTS idx_cards_type ON cards(card_type);
+CREATE INDEX IF NOT EXISTS idx_cards_expires ON cards(expires_at);
 
 -- Skills
 CREATE TABLE IF NOT EXISTS skills (
@@ -165,6 +169,87 @@ export class EvolutionDatabase {
    */
   private initializeSchema(): void {
     this.db.exec(SCHEMA);
+
+    // Run migrations
+    this.runMigrations();
+  }
+
+  /**
+   * Run database migrations
+   */
+  private runMigrations(): void {
+    // Check if cards table needs migration
+    const tableInfo = this.db.prepare(`
+      SELECT sql FROM sqlite_master
+      WHERE type='table' AND name='cards'
+    `).get() as { sql: string } | undefined;
+
+    if (tableInfo) {
+      // Check if cards table has the old schema (card_data column)
+      const hasOldSchema = tableInfo.sql.includes('card_data');
+
+      if (hasOldSchema) {
+        console.log('Migrating cards table to new schema...');
+        this.migrateCardsTable();
+      }
+    }
+  }
+
+  /**
+   * Migrate cards table from old schema to new schema
+   */
+  private migrateCardsTable(): void {
+    // Create new cards table with updated schema
+    const migrationSQL = `
+      -- Create new table
+      CREATE TABLE IF NOT EXISTS cards_new (
+        card_id TEXT PRIMARY KEY,
+        session_id TEXT NOT NULL,
+        candidate_id TEXT NOT NULL,
+        card_type TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        status TEXT NOT NULL,
+        content TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        expires_at INTEGER,
+        metadata TEXT,
+        FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+        FOREIGN KEY (candidate_id) REFERENCES candidates(candidate_id)
+      );
+
+      -- Copy data from old table to new table
+      INSERT INTO cards_new (
+        card_id, session_id, candidate_id, card_type,
+        title, description, status, content,
+        created_at, expires_at, metadata
+      )
+      SELECT
+        card_id, session_id, candidate_id, card_type,
+        json_extract(card_data, '$.title') as title,
+        json_extract(card_data, '$.description') as description,
+        status,
+        json_extract(card_data, '$.content') as content,
+        created_at,
+        expires_at,
+        metadata
+      FROM cards;
+
+      -- Drop old table
+      DROP TABLE cards;
+
+      -- Rename new table
+      ALTER TABLE cards_new RENAME TO cards;
+
+      -- Create indexes
+      CREATE INDEX IF NOT EXISTS idx_cards_session ON cards(session_id);
+      CREATE INDEX IF NOT EXISTS idx_cards_status ON cards(status);
+      CREATE INDEX IF NOT EXISTS idx_cards_type ON cards(card_type);
+      CREATE INDEX IF NOT EXISTS idx_cards_expires ON cards(expires_at);
+    `;
+
+    this.db.exec(migrationSQL);
+    console.log('Cards table migration completed');
   }
 
   /**
