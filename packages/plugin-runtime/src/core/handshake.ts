@@ -160,8 +160,9 @@ export class HandshakeManager {
     request: HandshakeRequest
   ): Promise<{ success: boolean; data?: HandshakeResponse; error?: string }> {
     const url = `${this.config.serviceUrl}/v1/runtime/handshake`;
+    const maxAttempts = this.config.retryAttempts ?? 3;
 
-    for (let attempt = 0; attempt < this.config.retryAttempts!; attempt++) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(
@@ -187,7 +188,7 @@ export class HandshakeManager {
         const data = (await response.json()) as HandshakeResponse;
         return { success: true, data };
       } catch (error) {
-        if (attempt === this.config.retryAttempts! - 1) {
+        if (attempt === maxAttempts - 1) {
           return {
             success: false,
             error:

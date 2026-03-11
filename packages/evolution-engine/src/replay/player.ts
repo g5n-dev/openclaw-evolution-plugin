@@ -139,7 +139,10 @@ export class ReplayPlayer {
     this.notifyStateChange();
 
     if (this.onEventCallback) {
-      this.onEventCallback(this.getCurrentEvent()!);
+      const currentEvent = this.getCurrentEvent();
+      if (currentEvent) {
+        this.onEventCallback(currentEvent);
+      }
     }
   }
 

@@ -379,7 +379,10 @@ export class CompatibilityManager {
    */
   private setNestedValue(obj: unknown, path: string, value: unknown): void {
     const keys = path.split('.');
-    const lastKey = keys.pop()!;
+    const lastKey = keys.pop();
+    if (!lastKey) {
+      throw new Error(`Invalid path: ${path}`);
+    }
     let current: Record<string, unknown> = obj as Record<string, unknown>;
 
     for (const key of keys) {

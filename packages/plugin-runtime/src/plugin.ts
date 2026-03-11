@@ -92,7 +92,7 @@ export class OpenClawEvolutionPlugin {
       capabilities: context.capabilities,
     });
 
-    if (!handshakeResult.success) {
+    if (!handshakeResult.success || !handshakeResult.sessionId) {
       throw new Error(
         `Handshake failed: ${handshakeResult.error}. Cannot initialize plugin.`
       );
@@ -111,7 +111,7 @@ export class OpenClawEvolutionPlugin {
       batchTimeout: this.config.batchTimeout,
     });
 
-    this.eventBridge.setSessionId(handshakeResult.sessionId!);
+    this.eventBridge.setSessionId(handshakeResult.sessionId);
 
     // Register event handlers
     this.registerEventHandlers();
@@ -184,14 +184,18 @@ export class OpenClawEvolutionPlugin {
       throw new Error('Plugin not initialized');
     }
 
+    if (!this.compatibilityManager || !this.eventBridge) {
+      throw new Error('Plugin components not initialized');
+    }
+
     // Normalize the event
     const event = EventNormalizer.normalize(runtimeEvent);
 
     // Map event fields for compatibility
-    const mappedEvent = this.compatibilityManager!.mapEvent(event);
+    const mappedEvent = this.compatibilityManager.mapEvent(event);
 
     // Send to event bridge
-    await this.eventBridge!.ingestEvent(mappedEvent);
+    await this.eventBridge.ingestEvent(mappedEvent);
   }
 
   /**
@@ -202,7 +206,11 @@ export class OpenClawEvolutionPlugin {
       throw new Error('Plugin not initialized');
     }
 
-    await this.eventBridge!.flush();
+    if (!this.eventBridge) {
+      throw new Error('Event bridge not initialized');
+    }
+
+    await this.eventBridge.flush();
   }
 
   // =============================================================================

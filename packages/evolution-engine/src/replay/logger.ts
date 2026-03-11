@@ -83,7 +83,10 @@ export class ReplayLogger {
     let session = this.sessions.get(sessionId);
     if (!session) {
       this.startSession(sessionId);
-      session = this.sessions.get(sessionId)!;
+      session = this.sessions.get(sessionId);
+      if (!session) {
+        throw new Error(`Failed to create session for ${sessionId}`);
+      }
     }
 
     session.events.push({

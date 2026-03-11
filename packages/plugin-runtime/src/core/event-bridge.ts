@@ -237,8 +237,12 @@ export class EventBridge {
     const url = `${this.config.serviceUrl}/v1/events`;
     const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
+    if (!this.sessionId) {
+      throw new Error('Session ID not set. Cannot send events.');
+    }
+
     const request: IngestEventsRequest = {
-      sessionId: this.sessionId!,
+      sessionId: this.sessionId,
       events,
       batchId,
     };
