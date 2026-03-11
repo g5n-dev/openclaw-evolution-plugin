@@ -10,6 +10,7 @@ import type {
   CardDecisionRequest,
   CardDecisionResponse,
   CardStatus,
+  CardType,
 } from '@openclaw-evolution/shared-types';
 import { getCardStore } from '../../storage/card-store';
 
@@ -32,7 +33,7 @@ cardsRouter.get('/', async (c) => {
     const cards = cardStore.queryCards({
       sessionId,
       status: status as CardStatus | undefined,
-      cardType: cardType as any,
+      cardType: cardType as CardType | undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: offset ? parseInt(offset, 10) : undefined,
       includeExpired: includeExpired === 'true',

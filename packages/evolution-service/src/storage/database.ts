@@ -122,6 +122,20 @@ CREATE TABLE IF NOT EXISTS skills (
 CREATE INDEX IF NOT EXISTS idx_skills_status ON skills(status);
 CREATE INDEX IF NOT EXISTS idx_skills_type ON skills(skill_type);
 
+-- Skill Versions
+CREATE TABLE IF NOT EXISTS skill_versions (
+  version_id TEXT PRIMARY KEY,
+  skill_id TEXT NOT NULL,
+  version TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  created_by TEXT NOT NULL,
+  change_reason TEXT,
+  FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_skill_versions_skill ON skill_versions(skill_id);
+
 -- Triggers
 CREATE TABLE IF NOT EXISTS triggers (
   trigger_id TEXT PRIMARY KEY,

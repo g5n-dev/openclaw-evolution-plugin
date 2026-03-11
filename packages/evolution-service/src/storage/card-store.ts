@@ -9,7 +9,6 @@ import type {
   Card,
   CardStatus,
   CardType,
-  ExtendedCard,
 } from '@openclaw-evolution/shared-types';
 import { getDatabase } from './database';
 
