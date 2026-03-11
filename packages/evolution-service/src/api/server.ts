@@ -45,6 +45,7 @@ export class EvolutionServer {
   private app: Hono;
   private config: Required<ServerConfig>;
   private server?: any;
+  private actualPort?: number;
 
   constructor(config: ServerConfig = {}) {
     this.config = {
@@ -161,6 +162,7 @@ export class EvolutionServer {
         port: this.config.port,
       });
 
+      this.actualPort = this.config.port;
       console.log(`Server running on ${url}`);
     } else {
       // Node.js environment
@@ -170,7 +172,11 @@ export class EvolutionServer {
         port: this.config.port,
       });
 
-      console.log(`Server running on ${url}`);
+      // @hono/node-server returns server with port info
+      // @ts-ignore
+      this.actualPort = this.server.port || this.server.address?.port || this.config.port;
+
+      console.log(`Server running on http://${this.config.host}:${this.actualPort}`);
     }
   }
 
@@ -195,6 +201,13 @@ export class EvolutionServer {
    */
   getApp(): Hono {
     return this.app;
+  }
+
+  /**
+   * Get the actual port the server is listening on
+   */
+  getPort(): number {
+    return this.actualPort || this.config.port;
   }
 }
 

@@ -22,17 +22,19 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@openclaw-evolution/shared-types": "workspace:*",
     "@hono/node-server": "^1.8.0",
-    "hono": "^4.0.0",
+    "@openclaw-evolution/shared-types": "workspace:*",
     "better-sqlite3": "^9.2.0",
-    "zod": "^3.22.0",
-    "uuid": "^9.0.0"
+    "hono": "^4.0.0",
+    "uuid": "^9.0.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
     "@types/better-sqlite3": "^7.6.8",
+    "@types/node": "^20.10.0",
+    "@types/node-fetch": "^2.6.13",
     "@types/uuid": "^9.0.7",
+    "node-fetch": "^3.3.2",
     "typescript": "^5.3.0",
     "vitest": "^1.0.0"
   }

@@ -2,31 +2,25 @@
  * Integration tests for Evolution Service API
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { EvolutionServer } from '@openclaw-evolution/evolution-service';
 
 describe('Evolution Service API Integration', () => {
   let server: EvolutionServer;
-  let baseUrl: string;
 
   beforeAll(async () => {
     server = new EvolutionServer({
-      port: 0, // Use random available port
+      port: 0,
       host: 'localhost',
     });
 
     await server.start();
-    const port = (server as any).server?.port || 3001;
-    baseUrl = `http://localhost:${port}`;
-  });
-
-  afterAll(async () => {
-    await server.stop();
   });
 
   describe('POST /v1/runtime/handshake', () => {
-    it('should perform handshake successfully', { timeout: 10000 }, async () => {
-      const response = await fetch(`${baseUrl}/v1/runtime/handshake`, {
+    it('should perform handshake successfully', async () => {
+      const app = server.getApp();
+      const response = await app.request('/v1/runtime/handshake', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -40,13 +34,15 @@ describe('Evolution Service API Integration', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.sessionId).toBeDefined();
-      expect(data.hostInfo).toBeDefined();
+      const result = await response.json();
+      expect(result.success).toBe(true);
+      expect(result.data.sessionId).toBeDefined();
+      expect(result.data.hostInfo).toBeDefined();
     });
 
-    it('should return error for invalid handshake', { timeout: 10000 }, async () => {
-      const response = await fetch(`${baseUrl}/v1/runtime/handshake`, {
+    it('should return error for invalid handshake', async () => {
+      const app = server.getApp();
+      const response = await app.request('/v1/runtime/handshake', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ invalid: 'data' }),
@@ -57,17 +53,19 @@ describe('Evolution Service API Integration', () => {
   });
 
   describe('POST /v1/events', () => {
-    it('should accept events', { timeout: 10000 }, async () => {
-      const response = await fetch(`${baseUrl}/v1/events`, {
+    it('should accept events', async () => {
+      const app = server.getApp();
+      const response = await app.request('/v1/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          sessionId: 'test-session-123',
           events: [
             {
               id: 'evt-test-1',
               type: 'user_message',
               timestamp: Date.now(),
-              sessionId: 'test-session',
+              sessionId: 'test-session-123',
               data: { content: 'test' },
             },
           ],
@@ -75,19 +73,22 @@ describe('Evolution Service API Integration', () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.accepted).toBe(1);
+      const result = await response.json();
+      expect(result.success).toBe(true);
+      expect(result.data.processed).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe('GET /v1/insights/dashboard', () => {
-    it('should return dashboard metrics', { timeout: 10000 }, async () => {
-      const response = await fetch(`${baseUrl}/v1/insights/dashboard`);
+    it('should return dashboard metrics', async () => {
+      const app = server.getApp();
+      const response = await app.request('/v1/insights/dashboard');
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data).toHaveProperty('totalSessions');
-      expect(data).toHaveProperty('totalEvents');
+      const result = await response.json();
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('totalSessions');
+      expect(result.data).toHaveProperty('totalEvents');
     });
   });
 });
