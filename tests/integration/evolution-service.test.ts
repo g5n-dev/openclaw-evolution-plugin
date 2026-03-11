@@ -2,15 +2,16 @@
  * Integration tests for Evolution Service
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { getDatabase, closeDatabase } from '@openclaw-evolution/evolution-service';
 import { EventStore, getEventStore } from '@openclaw-evolution/evolution-service';
 import { CandidateStore, getCandidateStore } from '@openclaw-evolution/evolution-service';
+import { EvolutionDatabase } from '@openclaw-evolution/evolution-service';
 import type { Event } from '@openclaw-evolution/shared-types';
 import { EventType, createEventId } from '@openclaw-evolution/shared-types';
 
 describe('Evolution Service Integration', () => {
-  let db: any;
+  let db: EvolutionDatabase;
 
   beforeEach(() => {
     // Use in-memory database for tests
@@ -33,7 +34,7 @@ describe('Evolution Service Integration', () => {
     it('should store an event', () => {
       const event: Event = {
         id: createEventId(),
-        type: EventType.USER_MESSAGE as any,
+        type: EventType.USER_MESSAGE,
         timestamp: Date.now(),
         sessionId: 'test-session',
         data: { content: 'test' },
@@ -50,14 +51,14 @@ describe('Evolution Service Integration', () => {
       const events: Event[] = [
         {
           id: createEventId(),
-          type: EventType.USER_MESSAGE as any,
+          type: EventType.USER_MESSAGE,
           timestamp: Date.now(),
           sessionId: 'test-session',
           data: { content: 'test1' },
         },
         {
           id: createEventId(),
-          type: EventType.ASSISTANT_RESPONSE as any,
+          type: EventType.ASSISTANT_RESPONSE,
           timestamp: Date.now(),
           sessionId: 'test-session',
           data: { content: 'test2' },
@@ -77,7 +78,7 @@ describe('Evolution Service Integration', () => {
 
       const event1: Event = {
         id: createEventId(),
-        type: EventType.USER_MESSAGE as any,
+        type: EventType.USER_MESSAGE,
         timestamp: Date.now(),
         sessionId: 'session-1',
         data: { content: 'test' },
@@ -85,7 +86,7 @@ describe('Evolution Service Integration', () => {
 
       const event2: Event = {
         id: createEventId(),
-        type: EventType.USER_MESSAGE as any,
+        type: EventType.USER_MESSAGE,
         timestamp: Date.now(),
         sessionId: 'session-2',
         data: { content: 'test' },

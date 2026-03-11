@@ -4,6 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { AvatarManager, createAvatarManager } from '@openclaw-evolution/evolution-engine';
+import { AvatarStage } from '@openclaw-evolution/shared-types';
 
 describe('AvatarManager', () => {
   let manager: AvatarManager;
@@ -79,21 +80,21 @@ describe('AvatarManager', () => {
 
   describe('evolveToStage', () => {
     it('should evolve to awakened stage', () => {
-      manager.evolveToStage('awakened' as any);
+      manager.evolveToStage(AvatarStage.AWAKENED);
       expect(manager.getStage()).toBe('awakened');
       expect(manager.getState().evolutionCount).toBe(1);
       expect(manager.getMutations()).toContain('shell_glow');
     });
 
     it('should evolve to learned stage', () => {
-      manager.evolveToStage('awakened' as any);
-      manager.evolveToStage('learned' as any);
+      manager.evolveToStage(AvatarStage.AWAKENED);
+      manager.evolveToStage(AvatarStage.LEARNED);
       expect(manager.getStage()).toBe('learned');
       expect(manager.getState().evolutionCount).toBe(2);
     });
 
     it('should track stage history', () => {
-      manager.evolveToStage('awakened' as any);
+      manager.evolveToStage(AvatarStage.AWAKENED);
       const history = manager.getStageHistory();
 
       expect(history.length).toBe(1);
@@ -103,7 +104,7 @@ describe('AvatarManager', () => {
 
   describe('reset', () => {
     it('should reset avatar to initial state', () => {
-      manager.evolveToStage('awakened' as any);
+      manager.evolveToStage(AvatarStage.AWAKENED);
       manager.reset();
 
       expect(manager.getStage()).toBe('base');

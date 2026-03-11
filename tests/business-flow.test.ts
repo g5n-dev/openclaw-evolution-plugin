@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { createServer } from '@openclaw-evolution/evolution-service';
 import { createAvatarManager } from '@openclaw-evolution/evolution-engine';
-import { EventType, createEventId } from '@openclaw-evolution/shared-types';
+import { EventType, createEventId, AvatarStage } from '@openclaw-evolution/shared-types';
 
 describe('业务流程端到端验证', () => {
   it('应该成功初始化并运行核心业务流程', async () => {
@@ -21,15 +21,15 @@ describe('业务流程端到端验证', () => {
     expect(initialState.currentStage).toBe('base');
 
     // 3. 测试 Avatar 进化
-    avatar.evolveToStage('awakened' as any);
+    avatar.evolveToStage(AvatarStage.AWAKENED);
     expect(avatar.getStage()).toBe('awakened');
 
     // 4. 继续进化到 learned 阶段
-    avatar.evolveToStage('learned' as any);
+    avatar.evolveToStage(AvatarStage.LEARNED);
     expect(avatar.getStage()).toBe('learned');
 
     // 5. 进化到 evolved 阶段
-    avatar.evolveToStage('evolved' as any);
+    avatar.evolveToStage(AvatarStage.EVOLVED);
     expect(avatar.getStage()).toBe('evolved');
 
     // 6. 测试事件系统
@@ -62,17 +62,17 @@ describe('业务流程端到端验证', () => {
     const avatar = createAvatarManager();
 
     // base -> awakened
-    avatar.evolveToStage('awakened' as any);
+    avatar.evolveToStage(AvatarStage.AWAKENED);
     expect(avatar.getStage()).toBe('awakened');
     expect(avatar.getMutations()).toContain('shell_glow');
 
     // awakened -> learned
-    avatar.evolveToStage('learned' as any);
+    avatar.evolveToStage(AvatarStage.LEARNED);
     expect(avatar.getStage()).toBe('learned');
     expect(avatar.getMutations()).toContain('node_expand');
 
     // learned -> evolved
-    avatar.evolveToStage('evolved' as any);
+    avatar.evolveToStage(AvatarStage.EVOLVED);
     expect(avatar.getStage()).toBe('evolved');
 
     // 验证所有突变都已添加
@@ -83,8 +83,8 @@ describe('业务流程端到端验证', () => {
   it('应该能够追踪进化历史', async () => {
     const avatar = createAvatarManager();
 
-    avatar.evolveToStage('awakened' as any);
-    avatar.evolveToStage('learned' as any);
+    avatar.evolveToStage(AvatarStage.AWAKENED);
+    avatar.evolveToStage(AvatarStage.LEARNED);
 
     const history = avatar.getStageHistory();
     expect(history.length).toBe(2);
@@ -95,7 +95,7 @@ describe('业务流程端到端验证', () => {
   it('应该能够序列化和反序列化 Avatar 状态', async () => {
     const avatar = createAvatarManager();
 
-    avatar.evolveToStage('awakened' as any);
+    avatar.evolveToStage(AvatarStage.AWAKENED);
     avatar.addMutations(['test_mutation']);
 
     const json = avatar.toJSON();
