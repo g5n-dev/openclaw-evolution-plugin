@@ -42,7 +42,7 @@ export class InMemoryA2UIRegistry implements A2UIComponentRegistry {
    */
   registerComponent(
     type: string,
-    component: ComponentType<any>,
+    component: ComponentType<Record<string, unknown>>,
     options?: {
       defaultProps?: Record<string, unknown>;
       description?: string;
@@ -86,20 +86,28 @@ export const globalA2UIRegistry = new InMemoryA2UIRegistry();
  * Initialize default A2UI components
  */
 export function initializeDefaultA2UIComponents(): void {
+  // Note: We're registering HTML element names as strings
+  // In a real implementation, you'd register actual React components
+  // For now, these are placeholders that demonstrate the registry pattern
+
   // Register basic UI components
-  globalA2UIRegistry.registerComponent('div', 'div' as any, {
+  globalA2UIRegistry.register('div', {
+    component: 'div' as unknown as React.ComponentType<Record<string, unknown>>,
     description: 'Generic container element',
   });
 
-  globalA2UIRegistry.registerComponent('span', 'span' as any, {
+  globalA2UIRegistry.register('span', {
+    component: 'span' as unknown as React.ComponentType<Record<string, unknown>>,
     description: 'Inline text element',
   });
 
-  globalA2UIRegistry.registerComponent('button', 'button' as any, {
+  globalA2UIRegistry.register('button', {
+    component: 'button' as unknown as React.ComponentType<Record<string, unknown>>,
     description: 'Clickable button',
   });
 
-  globalA2UIRegistry.registerComponent('text', 'span' as any, {
+  globalA2UIRegistry.register('text', {
+    component: 'span' as unknown as React.ComponentType<Record<string, unknown>>,
     description: 'Text component',
   });
 }

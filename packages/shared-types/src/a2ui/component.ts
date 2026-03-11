@@ -194,7 +194,7 @@ export interface A2UIComponentRegistry {
  */
 export interface A2UIRegisteredComponent {
   /** React component */
-  component: React.ComponentType<any>;
+  component: ComponentType;
 
   /** Optional props validator */
   validateProps?: (props: Record<string, unknown>) => boolean;
@@ -205,6 +205,11 @@ export interface A2UIRegisteredComponent {
   /** Component description (for debugging) */
   description?: string;
 }
+
+/**
+ * Generic component type (avoid React dependency in shared-types)
+ */
+export type ComponentType<T = unknown> = (props: T) => unknown;
 
 // =============================================================================
 // A2UI Update
@@ -292,22 +297,25 @@ export function getComponentTree(
   response: A2UIResponse,
   rootId?: string
 ): A2UIComponent[] {
-  const root = rootId ? findComponentById(response, rootId) : findComponentById(response, response.rootId);
+  const rootIdToUse = rootId ?? response.rootId;
+  const root = findComponentById(response, rootIdToUse);
 
   if (!root) {
     return [];
   }
 
   const result: A2UIComponent[] = [root];
-  const queue = root.children || [];
+  const queue = [...(root.children ?? [])];
 
   while (queue.length > 0) {
-    const childId = queue.shift()!;
+    const childId = queue.shift();
+    if (childId === undefined) continue;
+
     const child = findComponentById(response, childId);
 
     if (child) {
       result.push(child);
-      queue.push(...(child.children || []));
+      queue.push(...(child.children ?? []));
     }
   }
 

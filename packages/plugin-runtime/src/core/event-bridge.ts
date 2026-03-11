@@ -36,7 +36,7 @@ export interface EventBridgeStats {
 
 export class EventBridge {
   private config: Required<EventBridgeConfig>;
-  private eventBuffer: any[] = [];
+  private eventBuffer: BaseEvent[] = [];
   private batchTimer?: NodeJS.Timeout;
   private sessionId?: string;
   private stats: EventBridgeStats = {
@@ -73,16 +73,14 @@ export class EventBridge {
   /**
    * Ingest a single event
    */
-  async ingestEvent(event: any): Promise<void> {
+  async ingestEvent(event: RuntimeEvent): Promise<void> {
     if (!this.sessionId) {
       throw new Error('Session ID not set. Call setSessionId() first.');
     }
 
-    // Ensure event has session ID
-    const normalizedEvent = {
-      ...event,
-      sessionId: this.sessionId,
-    };
+    // Normalize event to BaseEvent
+    const normalizedEvent = EventNormalizer.normalize(event);
+    normalizedEvent.sessionId = this.sessionId;
 
     this.eventBuffer.push(normalizedEvent);
     this.stats.totalEvents++;
@@ -99,7 +97,7 @@ export class EventBridge {
   /**
    * Ingest multiple events at once
    */
-  async ingestEvents(events: any[]): Promise<void> {
+  async ingestEvents(events: RuntimeEvent[]): Promise<void> {
     for (const event of events) {
       await this.ingestEvent(event);
     }
@@ -208,7 +206,7 @@ export class EventBridge {
         this.stats.failedEvents += result.failed;
 
         // Re-add failed events to buffer for retry
-        const failedIndices = result.errors?.map((e: { eventId: string }) =>
+        const failedIndices = result.errors?.map((e) =>
           batch.findIndex((evt) => evt.id === e.eventId)
         );
 
@@ -233,7 +231,7 @@ export class EventBridge {
   /**
    * Send a batch of events to the evolution service
    */
-  private async sendBatch(events: any[]): Promise<IngestEventsResponse> {
+  private async sendBatch(events: BaseEvent[]): Promise<IngestEventsResponse> {
     const url = `${this.config.serviceUrl}/v1/events`;
     const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -296,25 +294,23 @@ export class EventNormalizer {
   /**
    * Normalize a runtime event to an evolution event
    */
-  static normalize(runtimeEvent: RuntimeEvent): any {
+  static normalize(runtimeEvent: RuntimeEvent): BaseEvent {
     const baseEvent: BaseEvent = {
       id: createEventId(),
       type: runtimeEvent.type as EvEventType,
       timestamp: runtimeEvent.timestamp ?? Date.now(),
       sessionId: '', // Will be set by EventBridge
       metadata: {},
-    };
-
-    return {
-      ...baseEvent,
       data: runtimeEvent.data,
     };
+
+    return baseEvent;
   }
 
   /**
    * Validate an event has required fields
    */
-  static validate(event: any): boolean {
+  static validate(event: BaseEvent): boolean {
     return !!(
       event.id &&
       event.type &&

@@ -16,6 +16,14 @@ export interface ReplayEvent {
   };
 }
 
+export interface BaseEvent {
+  id: string;
+  sessionId: string;
+  timestamp: number;
+  type: string;
+  data: unknown;
+}
+
 export interface ReplaySession {
   sessionId: string;
   startTime: number;
@@ -71,7 +79,7 @@ export class ReplayLogger {
    * Log an event for replay
    */
   logEvent(
-    event: any,
+    event: BaseEvent,
     replayData?: {
       snapshot?: Record<string, unknown>;
       mutations?: string[];
@@ -94,7 +102,7 @@ export class ReplayLogger {
       timestamp: event.timestamp,
       eventType: event.type,
       data: event.data as Record<string, unknown>,
-      replayData: replayData as any,
+      replayData,
     });
   }
 
@@ -111,7 +119,7 @@ export class ReplayLogger {
   ): void {
     const session = this.sessions.get(sessionId);
     if (session) {
-      session.avatarSnapshot = snapshot as any;
+      session.avatarSnapshot = snapshot;
     }
   }
 

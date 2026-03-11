@@ -20,6 +20,26 @@ export interface ProfessionalRenderState {
   time: number;
 }
 
+interface StageConfig {
+  primary: string;
+  secondary: string;
+  glow: {
+    enabled: boolean;
+    radius?: number;
+    opacity?: number;
+    blur?: number;
+    pulse?: boolean;
+    layers?: number;
+    bioluminescent?: boolean;
+  };
+  particles: {
+    count: number;
+  };
+  nodes: number;
+  coreSize: number;
+  innerCore?: number;
+}
+
 export class ProfessionalRenderer {
   private canvas: HTMLCanvasElement | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
@@ -74,8 +94,8 @@ export class ProfessionalRenderer {
   /**
    * Get stage configuration
    */
-  private getStageConfig(stage: string) {
-    const configs: Record<string, any> = {
+  private getStageConfig(stage: string): StageConfig {
+    const configs: Record<string, StageConfig> = {
       base: {
         primary: '#3B82F6',
         secondary: '#60A5FA',
@@ -123,7 +143,7 @@ export class ProfessionalRenderer {
     centerX: number,
     centerY: number,
     state: ProfessionalRenderState,
-    config: any
+    config: StageConfig
   ): void {
     if (!config.glow?.enabled) return;
 
@@ -160,7 +180,7 @@ export class ProfessionalRenderer {
     centerX: number,
     centerY: number,
     state: ProfessionalRenderState,
-    config: any
+    config: StageConfig
   ): void {
     const pulseFactor = state.isAnimating
       ? (Math.sin(state.time / 1000) + 1) / 2 * 0.1
@@ -227,7 +247,7 @@ export class ProfessionalRenderer {
     centerX: number,
     centerY: number,
     state: ProfessionalRenderState,
-    config: any
+    config: StageConfig
   ): void {
     if (config.nodes === 0) return;
 
@@ -267,7 +287,7 @@ export class ProfessionalRenderer {
     centerX: number,
     centerY: number,
     state: ProfessionalRenderState,
-    config: any
+    config: StageConfig
   ): void {
     const particleCount = config.particles.count;
 

@@ -5,11 +5,12 @@
  */
 
 import { getNextStage } from '../avatar/stages';
-import type { AvatarManager } from '../avatar/avatar';
+import type { AvatarManager, AvatarStage } from '../avatar/avatar';
+import type { AnimationType, AnimationIntensity } from '@openclaw-evolution/shared-types';
 
 export interface StateTransition {
-  fromStage: any;
-  toStage: any;
+  fromStage: AvatarStage;
+  toStage: AvatarStage;
   timestamp: number;
   trigger: string;
 }
@@ -32,7 +33,7 @@ export class AvatarStateMachine {
   /**
    * Get current stage
    */
-  getCurrentStage(): any {
+  getCurrentStage(): AvatarStage {
     return this.avatar.getStage();
   }
 
@@ -48,7 +49,7 @@ export class AvatarStateMachine {
   /**
    * Evolve to next stage
    */
-  evolve(trigger: string = 'manual'): any | null {
+  evolve(trigger: string = 'manual'): StateTransition | null {
     const currentStage = this.getCurrentStage();
     const nextStage = getNextStage(currentStage);
 
@@ -78,7 +79,7 @@ export class AvatarStateMachine {
   /**
    * Trigger animation based on event
    */
-  triggerAnimation(type: any, intensity: any = 'medium'): void {
+  triggerAnimation(type: AnimationType, intensity: AnimationIntensity = 'medium'): void {
     const duration = this.getAnimationDuration(type, intensity);
 
     // Animation would be triggered here
@@ -89,7 +90,7 @@ export class AvatarStateMachine {
   /**
    * Get animation duration
    */
-  private getAnimationDuration(type: any, intensity: any): number {
+  private getAnimationDuration(type: AnimationType, intensity: AnimationIntensity): number {
     const baseDurations: Record<string, number> = {
       pulse: 1000,
       evaluating: 2000,

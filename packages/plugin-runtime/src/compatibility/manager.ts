@@ -232,7 +232,7 @@ export class CompatibilityManager {
   /**
    * Map event fields based on version compatibility
    */
-  mapEvent(event: any): any {
+  mapEvent(event: Record<string, unknown>): Record<string, unknown> {
     const mappings = EVENT_MAPPINGS[this.hostVersion];
 
     if (!mappings) {
