@@ -80,8 +80,8 @@ candidatesRouter.get('/', async (c) => {
 
     const candidates = candidateStore.queryCandidates({
       sessionId,
-      status: status as any,
-      candidateType: candidateType as any,
+      status: status as Candidate['status'] | undefined,
+      candidateType: candidateType as Candidate['candidateType'] | undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: offset ? parseInt(offset, 10) : undefined,
     });

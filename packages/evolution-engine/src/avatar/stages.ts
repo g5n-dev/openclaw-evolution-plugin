@@ -17,9 +17,9 @@ export interface StageDefinition {
   requiredMutations: number;
 }
 
-export const AVATAR_STAGES: Record<string, StageDefinition> = {
+export const AVATAR_STAGES: Record<AvatarStage, StageDefinition> = {
   base: {
-    stage: 'base' as any,
+    stage: 'base',
     name: 'Base Stage',
     description: 'Initial OpenClaw state - clean slate',
     color: 210, // Blue
@@ -29,7 +29,7 @@ export const AVATAR_STAGES: Record<string, StageDefinition> = {
     requiredMutations: 0,
   },
   awakened: {
-    stage: 'awakened' as any,
+    stage: 'awakened',
     name: 'Awakened',
     description: 'First evolution activated - system aware',
     color: 220, // Blue-purple
@@ -39,7 +39,7 @@ export const AVATAR_STAGES: Record<string, StageDefinition> = {
     requiredMutations: 1,
   },
   learned: {
-    stage: 'learned' as any,
+    stage: 'learned',
     name: 'Learned',
     description: 'Multiple skills acquired - growing knowledge',
     color: 270, // Purple
@@ -49,7 +49,7 @@ export const AVATAR_STAGES: Record<string, StageDefinition> = {
     requiredMutations: 2,
   },
   evolved: {
-    stage: 'evolved' as any,
+    stage: 'evolved',
     name: 'Evolved',
     description: 'Fully evolved system - peak performance',
     color: 300, // Pink-purple
@@ -60,12 +60,12 @@ export const AVATAR_STAGES: Record<string, StageDefinition> = {
   },
 };
 
-export function getStageDefinition(stage: any): StageDefinition {
+export function getStageDefinition(stage: AvatarStage): StageDefinition {
   return AVATAR_STAGES[stage];
 }
 
-export function getNextStage(currentStage: any): any {
-  const stages = ['base', 'awakened', 'learned', 'evolved'];
+export function getNextStage(currentStage: AvatarStage): AvatarStage | null {
+  const stages: AvatarStage[] = ['base', 'awakened', 'learned', 'evolved'];
   const currentIndex = stages.indexOf(currentStage);
 
   if (currentIndex < stages.length - 1) {
@@ -75,8 +75,8 @@ export function getNextStage(currentStage: any): any {
   return null;
 }
 
-export function getPreviousStage(currentStage: any): any {
-  const stages = ['base', 'awakened', 'learned', 'evolved'];
+export function getPreviousStage(currentStage: AvatarStage): AvatarStage | null {
+  const stages: AvatarStage[] = ['base', 'awakened', 'learned', 'evolved'];
   const currentIndex = stages.indexOf(currentStage);
 
   if (currentIndex > 0) {

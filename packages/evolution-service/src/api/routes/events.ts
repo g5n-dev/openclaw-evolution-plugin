@@ -8,6 +8,7 @@ import { Hono } from 'hono';
 import type {
   IngestEventsRequest,
   IngestEventsResponse,
+  EventType,
 } from '@openclaw-evolution/shared-types';
 import { getEventStore } from '../../storage/event-store';
 import { getTriggerEngine } from '../../engines/trigger';
@@ -86,7 +87,7 @@ eventsRouter.get('/', async (c) => {
 
     const events = eventStore.queryEvents({
       sessionId,
-      eventType: eventType as any,
+      eventType: eventType as EventType | undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
       offset: offset ? parseInt(offset, 10) : undefined,
     });

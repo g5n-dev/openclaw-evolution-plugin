@@ -140,7 +140,7 @@ export class A2UIRenderer {
   private renderComponent(
     component: A2UIComponent,
     allComponents: A2UIComponent[],
-    parentElement?: HTMLElement
+    _parentElement?: HTMLElement
   ): HTMLElement | null {
     // Check cache for incremental updates
     const cachedElement = this.componentCache.get(component.id);

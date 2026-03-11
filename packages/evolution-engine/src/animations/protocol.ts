@@ -24,39 +24,39 @@ export interface AnimationProtocol {
   interruptible: boolean;
 }
 
-export const ANIMATION_PROTOCOLS: Record<string, Omit<AnimationProtocol, 'intensity' | 'duration'>> = {
+export const ANIMATION_PROTOCOLS: Record<AnimationType, Omit<AnimationProtocol, 'intensity' | 'duration'>> = {
   pulse: {
-    type: 'pulse' as any,
+    type: 'pulse',
     easing: 'easeInOut',
     loop: true,
     interruptible: true,
   },
   evaluating: {
-    type: 'evaluating' as any,
+    type: 'evaluating',
     easing: 'linear',
     loop: true,
     interruptible: true,
   },
   activation: {
-    type: 'activation' as any,
+    type: 'activation',
     easing: 'easeOut',
     loop: false,
     interruptible: false,
   },
   mutation: {
-    type: 'mutation' as any,
+    type: 'mutation',
     easing: 'easeInOut',
     loop: false,
     interruptible: false,
   },
   celebration: {
-    type: 'celebration' as any,
+    type: 'celebration',
     easing: 'easeOut',
     loop: false,
     interruptible: true,
   },
   error: {
-    type: 'error' as any,
+    type: 'error',
     easing: 'easeInOut',
     loop: true,
     interruptible: true,
@@ -65,10 +65,10 @@ export const ANIMATION_PROTOCOLS: Record<string, Omit<AnimationProtocol, 'intens
 
 export function createAnimationProtocol(
   type: AnimationType,
-  intensity: AnimationIntensity = 'medium' as any,
+  intensity: AnimationIntensity = 'medium',
   duration?: number
 ): AnimationProtocol {
-  const baseProtocol = ANIMATION_PROTOCOLS[type as string] as any;
+  const baseProtocol = ANIMATION_PROTOCOLS[type];
 
   const defaultDurations: Record<string, Record<string, number>> = {
     pulse: { low: 700, medium: 1000, high: 1500 },

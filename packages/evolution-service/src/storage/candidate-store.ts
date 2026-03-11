@@ -177,7 +177,22 @@ export class CandidateStore {
     }
 
     const stmt = db.prepare(sql);
-    const rows = stmt.all(...params) as any[];
+
+    type DatabaseRow = {
+      candidate_id: string;
+      session_id: string;
+      candidate_type: string;
+      source_event_id: string;
+      content: string;
+      description: string;
+      confidence: number;
+      status: string;
+      created_at: number;
+      updated_at: number;
+      metadata: string | null;
+    };
+
+    const rows = stmt.all(...params) as DatabaseRow[];
 
     return rows.map((row) => ({
       candidateId: row.candidate_id,
