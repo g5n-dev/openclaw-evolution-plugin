@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { EvolutionDatabase, getDatabase, closeDatabase } from '@openclaw-evolution/evolution-service';
+import { EvolutionDatabase, closeDatabase } from '@openclaw-evolution/evolution-service';
 
 describe('EvolutionDatabase', () => {
   let db: EvolutionDatabase;

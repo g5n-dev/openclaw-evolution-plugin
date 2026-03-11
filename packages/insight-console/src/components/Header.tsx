@@ -5,7 +5,7 @@ interface HeaderProps {
 }
 
 export function Header({ children }: HeaderProps) {
-  const { isOpen, toggle } = useSidebarStore();
+  const { toggle } = useSidebarStore();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">

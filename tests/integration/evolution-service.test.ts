@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { EvolutionDatabase, getDatabase, closeDatabase } from '@openclaw-evolution/evolution-service';
+import { getDatabase, closeDatabase } from '@openclaw-evolution/evolution-service';
 import { EventStore, getEventStore } from '@openclaw-evolution/evolution-service';
 import { CandidateStore, getCandidateStore } from '@openclaw-evolution/evolution-service';
 import type { Event } from '@openclaw-evolution/shared-types';

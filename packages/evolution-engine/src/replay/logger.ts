@@ -4,8 +4,6 @@
  * Logs all evolution events for replay functionality.
  */
 
-import type { Event } from '@openclaw-evolution/shared-types';
-
 export interface ReplayEvent {
   eventId: string;
   timestamp: number;

@@ -18,8 +18,9 @@ export const insightsRouter = new Hono();
  */
 insightsRouter.get('/dashboard', async (c) => {
   try {
-    const timeRange = c.req.query('time_range') || 'day';
-    const sessionId = c.req.query('session_id');
+    // TODO: Implement time_range and session_id filtering
+    // const timeRange = c.req.query('time_range') || 'day';
+    // const sessionId = c.req.query('session_id');
 
     // For MVP, return placeholder metrics
     const metrics: DashboardMetrics = {
@@ -54,8 +55,9 @@ insightsRouter.get('/dashboard', async (c) => {
  */
 insightsRouter.get('/funnel', async (c) => {
   try {
-    const timeRange = c.req.query('time_range') || 'day';
-    const sessionId = c.req.query('session_id');
+    // TODO: Implement time_range and session_id filtering
+    // const timeRange = c.req.query('time_range') || 'day';
+    // const sessionId = c.req.query('session_id');
 
     // For MVP, return placeholder metrics
     const metrics: FunnelMetrics = {

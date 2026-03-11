@@ -9,6 +9,22 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import { serve } from '@hono/node-server';
+
+// Type declarations for Bun runtime
+declare global {
+  // eslint-disable-next-line no-var
+  var Bun: {
+    serve: (options: {
+      fetch: (request: Request) => Response | Promise<Response>;
+      hostname: string;
+      port: number;
+    }) => {
+      port: number;
+      stop: () => void;
+    };
+  } | undefined;
+}
+
 // Hono types
 
 // Import routes
@@ -31,6 +47,14 @@ export interface ServerConfig {
   enableLogging?: boolean;
 }
 
+// Server type union for different runtimes
+type Server = {
+  port?: number;
+  address?: { port: number };
+  close?: () => void;
+  stop?: () => void;
+};
+
 // =============================================================================
 // Application Types
 // =============================================================================
@@ -44,7 +68,7 @@ export interface ServerConfig {
 export class EvolutionServer {
   private app: Hono;
   private config: Required<ServerConfig>;
-  private server?: any;
+  private server?: Server;
   private actualPort?: number;
 
   constructor(config: ServerConfig = {}) {
@@ -153,10 +177,8 @@ export class EvolutionServer {
     console.log(`Starting OpenClaw Evolution Service on ${url}...`);
 
     // Check for Bun runtime
-    // @ts-ignore - Bun is global if available
-    if (typeof Bun !== 'undefined') {
-      // @ts-ignore
-      this.server = Bun.serve({
+    if (typeof globalThis.Bun !== 'undefined') {
+      this.server = globalThis.Bun.serve({
         fetch: this.app.fetch,
         hostname: this.config.host,
         port: this.config.port,
@@ -173,8 +195,7 @@ export class EvolutionServer {
       });
 
       // @hono/node-server returns server with port info
-      // @ts-ignore
-      this.actualPort = this.server.port || this.server.address?.port || this.config.port;
+      this.actualPort = this.server.port ?? this.server.address?.port ?? this.config.port;
 
       console.log(`Server running on http://${this.config.host}:${this.actualPort}`);
     }
@@ -185,10 +206,10 @@ export class EvolutionServer {
    */
   async stop(): Promise<void> {
     if (this.server) {
-      // @ts-ignore - Bun and Node.js server both have close/stop
-      if (typeof this.server.close === 'function') {
+      // Try different cleanup methods for different runtimes
+      if (this.server.close) {
         this.server.close();
-      } else if (typeof this.server.stop === 'function') {
+      } else if (this.server.stop) {
         this.server.stop();
       }
       this.server = undefined;
@@ -220,8 +241,9 @@ export function createServer(config?: ServerConfig): EvolutionServer {
 }
 
 // Start server if this is the main module
-// @ts-ignore
-if (import.meta.main || require.main === module) {
+// Note: import.meta.main works in ESM, require.main works in CJS
+// @ts-expect-error - import.meta may not be defined in all environments
+if (import.meta.main || (typeof require !== 'undefined' && require.main === module)) {
   const server = createServer({
     port: parseInt(process.env.PORT ?? '3001', 10),
     host: process.env.HOST ?? '0.0.0.0',

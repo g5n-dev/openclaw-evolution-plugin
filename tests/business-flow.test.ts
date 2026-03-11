@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { EvolutionServer, createServer } from '@openclaw-evolution/evolution-service';
+import { createServer } from '@openclaw-evolution/evolution-service';
 import { createAvatarManager } from '@openclaw-evolution/evolution-engine';
 import { EventType, createEventId } from '@openclaw-evolution/shared-types';
 

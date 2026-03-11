@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Zap, Download, Play } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { createAvatarManager, createSimpleRenderer, createProfessionalRenderer } from '@openclaw-evolution/evolution-engine';
 
 type AvatarStage = 'base' | 'awakened' | 'learned' | 'evolved';

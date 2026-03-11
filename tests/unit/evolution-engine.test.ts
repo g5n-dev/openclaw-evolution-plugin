@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { AvatarManager, createAvatarManager, DEFAULT_AVATAR_CONFIG } from '@openclaw-evolution/evolution-engine';
+import { AvatarManager, createAvatarManager } from '@openclaw-evolution/evolution-engine';
 
 describe('AvatarManager', () => {
   let manager: AvatarManager;

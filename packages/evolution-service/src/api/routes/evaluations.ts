@@ -8,10 +8,8 @@ import { Hono } from 'hono';
 import type {
   RunEvaluationRequest,
   RunEvaluationResponse,
-  GetEvaluationRequest,
   EvaluationResponse,
 } from '@openclaw-evolution/shared-types';
-import { v4 as uuidv4 } from 'uuid';
 import { getCandidateStore } from '../../storage/candidate-store';
 import { getEvaluator } from '../../engines/evaluator';
 

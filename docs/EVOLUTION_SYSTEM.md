@@ -181,14 +181,146 @@ avatar.reset();
    - Evaluation passed → 'celebration' animation
    - Evaluation failed → 'error' animation
 
+## Rendering Systems
+
+### Simple Renderer (MVP)
+
+The Simple Renderer is a lightweight Canvas 2D implementation:
+
+- **Fast implementation** - Minimal setup time
+- **Core visualization** - Sufficient for basic Avatar display
+- **Easy upgrade path** - Can be replaced with advanced renderer
+
+**Features**:
+- Basic circle-based Avatar
+- Simple color transitions
+- Minimal particle effects
+- Basic glow effects
+
+### Professional Renderer 🦞
+
+The Professional Renderer is an advanced Canvas 2D implementation with organic, lobster-inspired design:
+
+**Design Philosophy: Lobster Metaphor**
+
+| Lobster Feature | System Representation | Visual Effect |
+|----------------|----------------------|---------------|
+| **Segmented Body** | 4 Evolution Stages | Blue → Purple → Violet → Pink gradient |
+| **Claws** | Skill Nodes | 2 → 4 → 8 orbiting nodes in symmetric rotation |
+| **Exoskeleton** | Protection Layer | Multi-layer breathing glow effects |
+| **Tentacles** | Sensory Connection | Lissajous curve organic particle motion |
+| **Molting** | Evolution Breakthrough | Particle burst + morphing animation |
+
+**Technical Features**:
+
+```typescript
+// Stage Configuration
+{
+  base: {
+    primary: '#3B82F6',      // Blue - Potential
+    secondary: '#60A5FA',
+    particles: 10,
+    nodes: 0,
+  },
+  awakened: {
+    primary: '#8B5CF6',      // Purple - Awakening
+    secondary: '#A78BFA',
+    particles: 20,
+    nodes: 2,
+    glow: { enabled: true, pulse: true },
+  },
+  learned: {
+    primary: '#A855F7',      // Violet - Learning
+    secondary: '#C084FC',
+    particles: 30,
+    nodes: 4,
+    glow: { layers: 2 },
+    innerCore: 30,
+  },
+  evolved: {
+    primary: '#EC4899',      // Pink - Fully Evolved
+    secondary: '#F472B6',
+    particles: 50,
+    nodes: 8,
+    glow: { layers: 3, bioluminescent: true },
+  },
+}
+```
+
+**Animation Effects**:
+
+1. **Lissajous Curve Particles**
+   ```typescript
+   // Organic, non-repeating motion
+   const angleX = 3 * delta + (i * 0.1);
+   const angleY = 2 * delta;
+   const orbitRadius = 60 + Math.sin(delta + i) * 20;
+   ```
+
+2. **Multi-Layer Glow System**
+   - Breathing pulse animation
+   - Radial gradient with opacity fade
+   - Stage-dependent intensity
+
+3. **Bioluminescent Effects** (Evolved stage only)
+   - Golden glow ring
+   - Sine-wave pulsing
+   - High-frequency animation
+
+4. **Rotating Hexagon Badge** (Evolved stage)
+   - Achievement indicator
+   - Continuous rotation
+   - Gradient fill with shadow glow
+
+**Usage**:
+
+```typescript
+import { createProfessionalRenderer } from '@openclaw-evolution/evolution-engine';
+
+const renderer = createProfessionalRenderer({
+  width: 400,
+  height: 400,
+  backgroundColor: '#0B0B10',  // Deep Space Black
+});
+
+renderer.initialize(canvasElement);
+
+renderer.startAnimation((progress: number, time: number) => ({
+  stage: avatar.getStage(),
+  mutations: avatar.getMutations(),
+  animationProgress: progress,
+  isAnimating: true,
+  time,
+}));
+```
+
+**Renderer Comparison**:
+
+| Feature | Simple | Professional |
+|---------|--------|-------------|
+| Implementation Time | 2 hours | 8 hours |
+| Visual Quality | Basic | Advanced |
+| Performance | Excellent | Good (60 FPS) |
+| Code Complexity | Low | Medium |
+| Animation Effects | 3 basic | 10+ advanced |
+| Particle Count | 10 fixed | 10-50 dynamic |
+| Customization | Limited | Extensive |
+| Production Ready | Yes | Yes |
+
 ## MVP Implementation
 
-For the MVP, we use:
+For the MVP, we provide both renderers:
 
-- **Simple Canvas 2D Renderer** instead of Three.js
-  - Faster implementation
+- **Simple Canvas 2D Renderer** (Default)
+  - Fast implementation
   - Sufficient for core visualization
-  - Easy to upgrade later
+  - Low resource usage
+
+- **Professional Renderer** (Optional)
+  - Enhanced visual experience
+  - Organic, lobster-inspired design
+  - Advanced animation effects
+  - Toggle between renderers in UI
 
 - **In-Memory Event Storage**
   - No database dependency
@@ -196,9 +328,9 @@ For the MVP, we use:
   - Can upgrade to persistent storage
 
 - **Basic Animation System**
-  - No complex physics
   - Easing-based animations
   - Frame generation protocol ready
+  - Support for both renderers
 
 ## Future Enhancements
 

@@ -83,7 +83,8 @@ export class AvatarManager {
       throw new Error(`Invalid stage transition: ${this.state.currentStage} -> ${stage}`);
     }
 
-    const previousStage = this.state.currentStage;
+    // TODO: Log previous stage for analytics/debugging
+    // const previousStage = this.state.currentStage;
 
     this.state.currentStage = stage;
     this.state.lastMutationAt = Date.now();

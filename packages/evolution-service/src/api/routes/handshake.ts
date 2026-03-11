@@ -71,8 +71,8 @@ handshakeRouter.post('/handshake', async (c) => {
 // =============================================================================
 
 function determineCompatibilityLevel(
-  minVersion: string,
-  requestedCapabilities: string[]
+  _minVersion: string,
+  _requestedCapabilities: string[]
 ): { level: 'full' | 'partial' | 'degraded'; adapterVersion?: string } {
   // For now, assume full compatibility
   // In production, this would check against actual host version

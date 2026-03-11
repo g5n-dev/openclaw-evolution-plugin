@@ -10,7 +10,6 @@ import type {
   PromoteSkillResponse,
   RollbackSkillRequest,
   RollbackSkillResponse,
-  ListSkillsRequest,
   SkillResponse,
 } from '@openclaw-evolution/shared-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -95,9 +94,10 @@ skillsRouter.post('/rollback', async (c) => {
  */
 skillsRouter.get('/', async (c) => {
   try {
-    const status = c.req.query('status');
-    const skillType = c.req.query('skill_type');
-    const limit = c.req.query('limit');
+    // TODO: Implement status, skill_type, and limit filtering
+    // const status = c.req.query('status');
+    // const skillType = c.req.query('skill_type');
+    // const limit = c.req.query('limit');
 
     // For MVP, return empty list
     return c.json({

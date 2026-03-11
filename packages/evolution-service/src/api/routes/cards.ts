@@ -6,12 +6,10 @@
 
 import { Hono } from 'hono';
 import type {
-  ListCardsRequest,
   CardResponse,
   CardDecisionRequest,
   CardDecisionResponse,
 } from '@openclaw-evolution/shared-types';
-import { v4 as uuidv4 } from 'uuid';
 
 export const cardsRouter = new Hono();
 
@@ -20,9 +18,10 @@ export const cardsRouter = new Hono();
  */
 cardsRouter.get('/', async (c) => {
   try {
-    const sessionId = c.req.query('session_id');
-    const status = c.req.query('status');
-    const limit = c.req.query('limit');
+    // TODO: Implement filtering by session_id, status, and limit
+    // const sessionId = c.req.query('session_id');
+    // const status = c.req.query('status');
+    // const limit = c.req.query('limit');
 
     // For MVP, return empty list
     return c.json({

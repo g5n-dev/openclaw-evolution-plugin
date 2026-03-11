@@ -38,17 +38,6 @@ export function CompatibilityPage() {
     }
   };
 
-  const getCompatibilityColor = () => {
-    switch (info.compatibilityLevel) {
-      case 'full':
-        return 'text-green-500 bg-green-500/10';
-      case 'partial':
-        return 'text-yellow-500 bg-yellow-500/10';
-      case 'degraded':
-        return 'text-red-500 bg-red-500/10';
-    }
-  };
-
   return (
     <div className="space-y-6">
       <div>
